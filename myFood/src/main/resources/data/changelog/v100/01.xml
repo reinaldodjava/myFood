@@ -1,0 +1,507 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+    
+    <changeSet author="rlocatelli" id="001">
+        <createTable tableName="order_sale">
+            <column name="id" type="NUMERIC" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="NUMERIC(10,4)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+        <createSequence sequenceName="order_seq"/>
+
+        <createIndex tableName="order_sale" indexName="osale_uk" unique="true">
+            <column name="id"/>
+        </createIndex>
+        
+        <addPrimaryKey tableName="order_sale" constraintName="osale_pk" columnNames="id"/>
+
+        <createTable tableName="user_access">
+            <column name="id" type="NUMERIC" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="login" type="VARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+        <createSequence sequenceName="user_access_seq"/>
+
+        <createIndex tableName="user_access" indexName="user_access_uk" unique="true">
+            <column name="id"/>
+        </createIndex>
+        
+        <createIndex tableName="user_access" indexName="useraccess_login_uk" unique="true">
+            <column name="login"/>
+        </createIndex>        
+        
+        <addPrimaryKey tableName="user_access" constraintName="user_access_pk" columnNames="id"/>
+
+        <createTable tableName="ingredient">
+            <column name="id" type="NUMERIC" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="NUMERIC(10,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>            
+        </createTable>
+        
+        <createSequence sequenceName="ingredient_seq"/>
+
+        <createIndex tableName="ingredient" indexName="ingredient_uk" unique="true">
+            <column name="id"/>
+        </createIndex>
+        
+        <addPrimaryKey tableName="ingredient" constraintName="ingredient_pk" columnNames="id"/>
+
+        <createTable tableName="sale_rules">
+            <column name="id" type="NUMERIC" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rule_type" type="VARCHAR(20)" remarks="HAVE_NOT_HAVE,TAKE_PAY">
+                <constraints nullable="false"/>
+            </column>
+            <column name="have_ingredient_id" type="NUMERIC"/>
+            <column name="not_have_ingredient_id" type="NUMERIC"/>
+            <column name="discount_percent_value" type="NUMERIC(7,4)"/>
+            <column name="take_ingredient_id" type="NUMERIC"/>
+            <column name="take_quantity" type="NUMERIC"/>
+            <column name="pay_for_quantity" type="NUMERIC(10,4)"/>
+            <column name="enabled" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+        <createSequence sequenceName="sale_rules_seq"/>
+        
+        <createIndex tableName="sale_rules" indexName="srules_uk" unique="true">
+            <column name="id"/>
+        </createIndex>
+
+        <createIndex tableName="sale_rules" indexName="srules_ingredient1_xfk">
+            <column name="have_ingredient_id"/>
+        </createIndex>
+
+        <createIndex tableName="sale_rules" indexName="srules_ingredient2_xfk">
+            <column name="not_have_ingredient_id"/>
+        </createIndex>
+
+        <createIndex tableName="sale_rules" indexName="srules_ingredient3_xfk">
+            <column name="take_ingredient_id"/>
+        </createIndex>
+        
+        <addPrimaryKey tableName="sale_rules" constraintName="sale_rules_pk" columnNames="id"/>
+
+        <createTable tableName="snack">
+            <column name="id" type="NUMERIC" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createSequence sequenceName="snack_seq"/>
+
+        <createIndex tableName="snack" indexName="snack_uk">
+            <column name="id"/>
+        </createIndex>
+        
+        <addPrimaryKey tableName="snack" constraintName="snack_pk" columnNames="id"/>
+
+        <createTable tableName="order_snack">
+            <column name="id" type="NUMERIC" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_id" type="NUMERIC">
+                <constraints nullable="false"/>
+            </column>
+            <column name="snack_id" type="NUMERIC">
+                <constraints nullable="false"/>
+            </column>
+            <column name="snack_description" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="NUMERIC(10,4)">
+                <constraints nullable="false"/>
+            </column>            
+        </createTable>
+        
+        <createSequence sequenceName="order_snack_seq"/>
+
+        <createIndex tableName="order_snack" indexName="osnack_uk" unique="true">
+            <column name="id"/>
+        </createIndex>
+
+        <createIndex tableName="order_snack" indexName="osnack_order_xfk">
+            <column name="order_id"/>
+        </createIndex>
+
+        <createIndex tableName="order_snack" indexName="osnack_snack_xfk">
+            <column name="snack_id"/>
+        </createIndex>
+        
+        <addPrimaryKey tableName="order_snack" constraintName="order_snack_pk" columnNames="id"/>
+
+        <createTable tableName="order_sale_rules">
+            <column name="id" type="NUMERIC" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_snack_id" type="NUMERIC">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(250)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+        <createSequence sequenceName="order_sale_rules_seq"/>
+        
+        <createIndex tableName="order_sale_rules" indexName="osrules_uk" unique="true">
+            <column name="id"/>
+        </createIndex>
+
+        <createIndex tableName="order_sale_rules" indexName="osrules_osnack_xfk">
+            <column name="order_snack_id"/>
+        </createIndex>
+
+        <addPrimaryKey tableName="order_sale_rules" constraintName="sale_rules_pk_1" columnNames="id"/>
+
+        <createTable tableName="order_snack_ingredient">
+            <column name="id" type="NUMERIC" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="NUMERIC(10,4)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ingredient_id" type="NUMERIC">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_snack_id" type="NUMERIC">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="NUMERIC(10,4)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        
+        <createSequence sequenceName="order_snack_ingredient_seq"/>
+
+        <createIndex tableName="order_snack_ingredient" indexName="osingredient_uk">
+            <column name="id"/>
+        </createIndex>
+
+        <createIndex tableName="order_snack_ingredient" indexName="osingredient_ingredient_xfk">
+            <column name="ingredient_id"/>
+        </createIndex>
+
+        <createIndex tableName="order_snack_ingredient" indexName="osingredient_osnack_xfk">
+            <column name="order_snack_id"/>
+        </createIndex>
+        
+        <addPrimaryKey tableName="order_snack_ingredient" constraintName="order_snack_ingredient_pk" columnNames="id"/>
+
+        <createTable tableName="snack_ingredient">
+            <column name="id" type="NUMERIC" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="snack_id" type="NUMERIC">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ingredient_id" type="NUMERIC">
+                <constraints nullable="false"/>
+            </column>
+            <column name="quantity" type="NUMERIC(10,4)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createSequence sequenceName="snack_ingredient_seq"/>
+
+        <createIndex tableName="snack_ingredient" indexName="singredient_uk" unique="true">
+            <column name="id"/>
+        </createIndex>
+
+        <createIndex tableName="snack_ingredient" indexName="singredient_snack_xfk">
+            <column name="snack_id"/>
+        </createIndex>
+
+        <createIndex tableName="snack_ingredient" indexName="singredient_ingredient_xfk">
+            <column name="ingredient_id"/>
+        </createIndex>
+        
+        <addPrimaryKey tableName="snack_ingredient" constraintName="snack_ingredient_pk" columnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="order_snack" constraintName="osale_osnack_fk" baseColumnNames="order_id" referencedTableName="order_sale" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="snack_ingredient" constraintName="ingredient_singredient_fk" baseColumnNames="ingredient_id" referencedTableName="ingredient" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="sale_rules" constraintName="ingredient_srules_fk" baseColumnNames="take_ingredient_id" referencedTableName="ingredient" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="sale_rules" constraintName="ingredient_srules2_fk" baseColumnNames="not_have_ingredient_id" referencedTableName="ingredient" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="sale_rules" constraintName="ingredient_srules3_fk" baseColumnNames="have_ingredient_id" referencedTableName="ingredient" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="order_snack_ingredient" constraintName="ingredient_oingredient_fk" baseColumnNames="ingredient_id" referencedTableName="ingredient" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="snack_ingredient" constraintName="snack_singredient_fk" baseColumnNames="snack_id" referencedTableName="snack" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="order_snack" constraintName="snack_osnack_fk" baseColumnNames="snack_id" referencedTableName="snack" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="order_snack_ingredient" constraintName="osnack_osingredient_fk" baseColumnNames="order_snack_id" referencedTableName="order_snack" referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="order_sale_rules" constraintName="osnack_osrules_fk" baseColumnNames="order_snack_id" referencedTableName="order_snack" referencedColumnNames="id"/>
+    </changeSet>    
+    
+    <changeSet author="rlocatelli" id="002">
+        
+        <insert tableName="snack">
+            <column name="id">1</column>
+            <column name="description">X-Bacon</column>
+            <column name="enabled">true</column>
+        </insert>
+        <insert tableName="snack">
+            <column name="id">2</column>
+            <column name="description">X-Burger</column>
+            <column name="enabled">true</column>
+        </insert>
+        <insert tableName="snack">
+            <column name="id">3</column>
+            <column name="description">X-Egg</column>
+            <column name="enabled">true</column>
+        </insert>
+        <insert tableName="snack">
+            <column name="id">4</column>
+            <column name="description">X-Egg Bacon</column>
+            <column name="enabled">true</column>
+        </insert>
+        
+        <dropSequence sequenceName="snack_seq"/>
+        <createSequence sequenceName="snack_seq" startValue="5"/>
+        
+        <insert tableName="ingredient">
+            <column name="id">1</column>
+            <column name="description">Alface</column>
+            <column name="price">0.40</column>
+            <column name="enabled">true</column>
+        </insert>
+        
+        <insert tableName="ingredient">
+            <column name="id">2</column>
+            <column name="description">Bacon</column>
+            <column name="price">2.00</column>
+            <column name="enabled">true</column>
+        </insert>
+
+        <insert tableName="ingredient">
+            <column name="id">3</column>
+            <column name="description">Hambúrguer</column>
+            <column name="price">3.00</column>
+            <column name="enabled">true</column>
+        </insert>              
+
+        <insert tableName="ingredient">
+            <column name="id">4</column>
+            <column name="description">Ovo</column>
+            <column name="price">0.80</column>
+            <column name="enabled">true</column>
+        </insert>
+        
+        <insert tableName="ingredient">
+            <column name="id">5</column>
+            <column name="description">Queijo</column>
+            <column name="price">1.50</column>
+            <column name="enabled">true</column>
+        </insert>  
+        
+        <dropSequence sequenceName="ingredient_seq"/>
+        <createSequence sequenceName="ingredient_seq" startValue="6"/>
+              
+        <!--X-Bacon Ingredientes-->
+        <insert tableName="snack_ingredient">
+            <column name="id">1</column>
+            <column name="snack_id">1</column>
+            <column name="ingredient_id">2</column>
+            <column name="quantity">1</column>
+        </insert>
+        
+        <insert tableName="snack_ingredient">
+            <column name="id">2</column>
+            <column name="snack_id">1</column>
+            <column name="ingredient_id">3</column>
+            <column name="quantity">1</column>
+        </insert>
+        
+        <insert tableName="snack_ingredient">
+            <column name="id">3</column>
+            <column name="snack_id">1</column>
+            <column name="ingredient_id">5</column>
+            <column name="quantity">1</column>
+        </insert>
+        
+        <!--X-Burger Ingredientes-->
+        <insert tableName="snack_ingredient">
+            <column name="id">4</column>
+            <column name="snack_id">2</column>
+            <column name="ingredient_id">3</column>
+            <column name="quantity">1</column>
+        </insert>
+        
+        <insert tableName="snack_ingredient">
+            <column name="id">5</column>
+            <column name="snack_id">2</column>
+            <column name="ingredient_id">5</column>
+            <column name="quantity">1</column>
+        </insert>
+        
+        <!--X-Egg Ingredientes-->
+        <insert tableName="snack_ingredient">
+            <column name="id">6</column>
+            <column name="snack_id">3</column>
+            <column name="ingredient_id">4</column>
+            <column name="quantity">1</column>
+        </insert>
+        
+        <insert tableName="snack_ingredient">
+            <column name="id">7</column>
+            <column name="snack_id">3</column>
+            <column name="ingredient_id">3</column>
+            <column name="quantity">1</column>
+        </insert>
+        
+        <insert tableName="snack_ingredient">
+            <column name="id">8</column>
+            <column name="snack_id">3</column>
+            <column name="ingredient_id">5</column>
+            <column name="quantity">1</column>
+        </insert>
+        
+        <!--X-Egg Bacon Ingredientes-->
+        <insert tableName="snack_ingredient">
+            <column name="id">9</column>
+            <column name="snack_id">4</column>
+            <column name="ingredient_id">4</column>
+            <column name="quantity">1</column>
+        </insert>
+        
+        <insert tableName="snack_ingredient">
+            <column name="id">10</column>
+            <column name="snack_id">4</column>
+            <column name="ingredient_id">2</column>
+            <column name="quantity">1</column>
+        </insert>        
+        
+        <insert tableName="snack_ingredient">
+            <column name="id">11</column>
+            <column name="snack_id">4</column>
+            <column name="ingredient_id">3</column>
+            <column name="quantity">1</column>
+        </insert>
+        
+        <insert tableName="snack_ingredient">
+            <column name="id">12</column>
+            <column name="snack_id">4</column>
+            <column name="ingredient_id">5</column>
+            <column name="quantity">1</column>
+        </insert>
+        
+        <dropSequence sequenceName="snack_ingredient_seq"/>
+        <createSequence sequenceName="snack_ingredient_seq" startValue="13"/>                                              
+        
+        <!--Sale Rules-->
+        <insert tableName="sale_rules">
+            <column name="id">1</column>
+            <column name="name">Light</column>
+            <column name="description">Lanche com alface e sem bacon você ganha 10% de desconto.</column>
+            <column name="rule_type">HAVE_NOT_HAVE</column>
+            <column name="have_ingredient_id">1</column>
+            <column name="not_have_ingredient_id">2</column>
+            <column name="discount_percent_value">10</column>
+            <column name="take_ingredient_id"></column>
+            <column name="take_quantity"></column>
+            <column name="pay_for_quantity"></column>
+            <column name="enabled">true</column>
+        </insert>
+
+        <insert tableName="sale_rules">
+            <column name="id">2</column>
+            <column name="name">Muita carne</column>
+            <column name="description">A cada 3 porções de hambúrguer você só paga 2 porções</column>
+            <column name="rule_type">TAKE_PAY</column>
+            <column name="have_ingredient_id"></column>
+            <column name="not_have_ingredient_id"></column>
+            <column name="discount_percent_value"></column>
+            <column name="take_ingredient_id">3</column>
+            <column name="take_quantity">3</column>
+            <column name="pay_for_quantity">2</column>
+            <column name="enabled">true</column>
+        </insert>
+        
+        <insert tableName="sale_rules">
+            <column name="id">3</column>
+            <column name="name">Muito Queijo</column>
+            <column name="description">A cada 3 porções de queijo você só paga 2 porções</column>
+            <column name="rule_type">TAKE_PAY</column>
+            <column name="have_ingredient_id"></column>
+            <column name="not_have_ingredient_id"></column>
+            <column name="discount_percent_value"></column>
+            <column name="take_ingredient_id">5</column>
+            <column name="take_quantity">3</column>
+            <column name="pay_for_quantity">2</column>
+            <column name="enabled">true</column>
+        </insert>
+        
+        <dropSequence sequenceName="sale_rules_seq"/>
+        <createSequence sequenceName="sale_rules_seq" startValue="4"/>                                          
+        
+    </changeSet>
+    
+    <changeSet author="rlocatelli" id="003">
+        <insert tableName="user_access">
+            <column name="id">1</column>
+            <column name="login">finch</column>
+            <column name="password">c041f0a44b95c6d5c7c3ff47e8ea9733</column>
+            <column name="enabled">true</column>
+        </insert>
+        <dropSequence sequenceName="user_access_seq"/>
+        <createSequence sequenceName="user_access_seq" startValue="2"/>
+    </changeSet>    
+
+</databaseChangeLog>
