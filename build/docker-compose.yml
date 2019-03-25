@@ -25,7 +25,7 @@ services:
       - "9090:9090"
     environment:
       - JAVA_OPTS=-Xmx128m
-      - APP_HOST=127.0.0.1
+      - APP_HOST=52.67.137.255
       - APP_PORT=9090
     tty:
       true
@@ -39,7 +39,7 @@ services:
       - "8080:8080"
     environment:
       - JAVA_OPTS=-Xmx128m
-      - APP_HOST=127.0.0.1
+      - APP_HOST=52.67.137.255
       - APP_PORT=8080
       - REGISTRY_HOST=eureka
       - REGISTRY_PORT=9090
@@ -55,7 +55,7 @@ services:
       - "9101:9101"
     environment:
       - JAVA_OPTS=-Xmx128m
-      - APP_HOST=127.0.0.1
+      - APP_HOST=52.67.137.255
       - APP_PORT=9101
       - REGISTRY_HOST=eureka
       - REGISTRY_PORT=9090
